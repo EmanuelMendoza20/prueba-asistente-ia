@@ -2,15 +2,40 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat con Artur</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
+    * {
+      box-sizing: border-box;
     }
 
-    /* Burbuja de chat flotante */
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #007bff;
+    }
+
+    p {
+      font-size: 1.1rem;
+    }
+
+    /* Burbuja de chat */
     #chat-bubble {
       position: fixed;
       bottom: 20px;
@@ -20,27 +45,29 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      text-align: center;
-      line-height: 60px;
-      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       z-index: 1000;
     }
 
-    /* Contenedor del chat (ventana) */
+    /* Ventana del chat */
     #chat-container {
       position: fixed;
       bottom: 90px;
       right: 20px;
-      width: 300px;
-      max-height: 400px;
+      width: 100%;
+      max-width: 360px;
+      max-height: 500px;
       background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
+      border-radius: 12px;
+      border: 1px solid #ddd;
       display: none;
       flex-direction: column;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
       overflow: hidden;
       z-index: 1000;
     }
@@ -48,14 +75,14 @@
     #chat-header {
       background-color: #007bff;
       color: white;
-      padding: 10px;
-      font-weight: bold;
+      padding: 12px;
+      font-weight: 600;
       text-align: center;
     }
 
     #chat-messages {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       overflow-y: auto;
       height: 250px;
     }
@@ -70,81 +97,97 @@
       border: none;
       padding: 10px;
       font-size: 14px;
+      outline: none;
     }
 
     #chat-input button {
       background-color: #007bff;
       color: white;
       border: none;
-      padding: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
       cursor: pointer;
     }
-    .container{
-        padding: 2rem;
+
+    @media (max-width: 480px) {
+      #chat-container {
+        right: 10px;
+        left: 10px;
+        width: auto;
+      }
+
+      #chat-bubble {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+      }
     }
   </style>
 </head>
-<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
-<script type="module">
-	import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-	createChat({
-	webhookUrl: 'https://n8n-saul.duckdns.org/webhook/c1948f4c-bd58-408f-a0b5-06f90ff65dda/chat',
-	webhookConfig: {
-		method: 'POST',
-		headers: {}
-	},
-	target: '#n8n-chat',
-	mode: 'window',
-	chatInputKey: 'chatInput',
-	chatSessionKey: 'sessionId',
-	metadata: {},
-	showWelcomeScreen: false,
-	defaultLanguage: 'en',
-	initialMessages: [
-		'¡Saludos! 👋',
-		'Mi nombre es Artur, asistente conversacional. ¿En qué puedo ayudarte el día de hoy?'
-	],
-	i18n: {
-		en: {
-			title: '¡Saludos! 👋',
-			subtitle: "Sala de ayuda. Disponible 24/7",
-			footer: '',
-			getStarted: 'Nueva conversación',
-			inputPlaceholder: 'Escribe tu consulta...',
-		},
-	},
-});
-</script>
 <body>
-    <div class="container">
-        <h1>Artur - Alpha</h1>
-        <p>Haga click en la burbuja para hablar con nuestro asistente conversacional.</p>
+  <div class="container">
+    <h1>Artur - Asistente Conversacional (Alpha)</h1>
+    <p>Hacé clic en la burbuja azul para hablar con nuestro asistente virtual.</p>
+  </div>
+
+  <!-- Burbuja flotante -->
+  <div id="chat-bubble">💬</div>
+
+  <!-- Contenedor del chat -->
+  <div id="chat-container">
+    <div id="chat-header">Artur - Asistente Alpha</div>
+    <div id="chat-messages">
+      <!-- Aquí aparecerán los mensajes si fuera un chat personalizado -->
     </div>
-<!-- Burbuja flotante -->
-<div id="chat-bubble">💬</div>
-
-<!-- Ventana del chat -->
-<div id="chat-container">
-  <div id="chat-header">Artur - Asistente Alpha</div>
-  <div id="chat-messages">
-    <!-- Mensajes aparecerán aquí -->
+    <div id="chat-input">
+      <input type="text" placeholder="Escribí tu mensaje..." />
+      <button>Enviar</button>
+    </div>
   </div>
-  <div id="chat-input">
-    <input type="text" placeholder="Escribí tu mensaje..." />
-    <button>Enviar</button>
-  </div>
-</div>
 
-<script>
-  const bubble = document.getElementById('chat-bubble');
-  const container = document.getElementById('chat-container');
+  <!-- Script del chat de n8n -->
+  <script type="module">
+    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-  bubble.addEventListener('click', () => {
-    container.style.display = container.style.display === 'flex' ? 'none' : 'flex';
-    container.style.flexDirection = 'column';
-  });
-</script>
+    createChat({
+      webhookUrl: 'https://n8n-saul.duckdns.org/webhook/c1948f4c-bd58-408f-a0b5-06f90ff65dda/chat',
+      webhookConfig: {
+        method: 'POST',
+        headers: {}
+      },
+      target: '#n8n-chat',
+      mode: 'window',
+      chatInputKey: 'chatInput',
+      chatSessionKey: 'sessionId',
+      metadata: {},
+      showWelcomeScreen: false,
+      defaultLanguage: 'en',
+      initialMessages: [
+        '¡Saludos! 👋',
+        'Mi nombre es Artur, asistente conversacional. ¿En qué puedo ayudarte el día de hoy?'
+      ],
+      i18n: {
+        en: {
+          title: '¡Saludos! 👋',
+          subtitle: "Sala de ayuda. Disponible 24/7",
+          footer: '',
+          getStarted: 'Nueva conversación',
+          inputPlaceholder: 'Escribe tu consulta...',
+        },
+      },
+    });
+  </script>
 
+  <!-- Mostrar/ocultar el contenedor del chat -->
+  <script>
+    const bubble = document.getElementById('chat-bubble');
+    const container = document.getElementById('chat-container');
+
+    bubble.addEventListener('click', () => {
+      container.style.display = container.style.display === 'flex' ? 'none' : 'flex';
+      container.style.flexDirection = 'column';
+    });
+  </script>
 </body>
 </html>
